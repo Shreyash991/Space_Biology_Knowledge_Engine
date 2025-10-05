@@ -53,7 +53,7 @@ const KnowledgeGraph2D = ({ papers, mode = 'connections', onNodeClick, onNodeHov
     });
 
     const categoryNames = Object.keys(categories);
-    const clusterRadius = 200;
+    const clusterRadius = 240; // spread clusters a bit more to avoid overlaps
     
     categoryNames.forEach((category, categoryIndex) => {
       const categoryPapers = categories[category];
@@ -65,7 +65,8 @@ const KnowledgeGraph2D = ({ papers, mode = 'connections', onNodeClick, onNodeHov
       
       categoryPapers.forEach((paper, paperIndex) => {
         const paperAngle = (paperIndex / categoryPapers.length) * Math.PI * 2;
-        const paperRadius = 30 + Math.random() * 40;
+        // Larger local radius to reduce internal overlap
+        const paperRadius = 60 + Math.random() * 50;
         
         positions.push({
           x: clusterCenter.x + Math.cos(paperAngle) * paperRadius,
@@ -307,12 +308,29 @@ const KnowledgeGraph2D = ({ papers, mode = 'connections', onNodeClick, onNodeHov
       // Calculate cluster center
       const centerX = data.positions.reduce((sum, pos) => sum + pos.x, 0) / data.positions.length;
       const centerY = data.positions.reduce((sum, pos) => sum + pos.y, 0) / data.positions.length;
+      // Estimate cluster radius (furthest node from center)
+      const maxR = data.positions.reduce((max, pos) => {
+        const r = Math.hypot(pos.x - centerX, pos.y - centerY) + getNodeSize(pos.paper);
+        return Math.max(max, r);
+      }, 0);
+      const labelY = centerY - (maxR + 24); // place label above cluster edge
       
-      // Draw cluster label
+      // Label background for readability
+      ctx.font = 'bold 16px Arial';
+      const text = category;
+      const textWidth = ctx.measureText(text).width;
+      const paddingX = 8;
+      const paddingY = 4;
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(centerX - textWidth / 2 - paddingX, labelY - 14 - paddingY, textWidth + paddingX * 2, 20 + paddingY * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(centerX - textWidth / 2 - paddingX, labelY - 14 - paddingY, textWidth + paddingX * 2, 20 + paddingY * 2);
+      
+      // Draw cluster label text
       ctx.fillStyle = categoryColors[category] || '#60a5fa';
-      ctx.font = 'bold 14px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(category, centerX, centerY - 50);
+      ctx.fillText(text, centerX, labelY);
     });
   };
 
