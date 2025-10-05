@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { FaArrowLeft, FaSpinner, FaChartLine, FaBrain, FaNetworkWired, FaLightbulb, FaFileAlt } from 'react-icons/fa';
 import PaperSummary from '../components/PaperSummary';
 import Chatbot from '../components/Chatbot';
-import { fetchPaperById } from '../services/api';
-import ResearchVisualizer from '../components/ResearchVisualizer';
+import { fetchPaperById, fetchPapers } from '../services/api';
+import KnowledgeGraph2D from '../components/KnowledgeGraph2D';
 
 const PaperDetail = () => {
   const { id } = useParams();
@@ -15,11 +15,16 @@ const PaperDetail = () => {
   const [activeTab, setActiveTab] = useState('summary');
   const [relatedPapers, setRelatedPapers] = useState([]);
   const [graphMode, setGraphMode] = useState('connections');
+  const [allPapers, setAllPapers] = useState([]);
   
   useEffect(() => {
     const loadPaper = async () => {
       setLoading(true);
       try {
+        // Load all papers from CSV for knowledge graph
+        const allPapersData = await fetchPapers();
+        setAllPapers(allPapersData);
+        
         const data = await fetchPaperById(id);
         setPaper(data);
         
@@ -371,18 +376,18 @@ const PaperDetail = () => {
               {graphMode === 'connections' && (
                 <>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-blue-400">{relatedPapers.length}</div>
+                    <div className="text-2xl font-bold text-blue-400">{allPapers.length}</div>
                     <div className="text-sm text-gray-400">Total Papers</div>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-green-400">
-                      {relatedPapers.reduce((acc, paper) => acc + (paper.relatedPapers?.length || 0), 0)}
+                      {allPapers.reduce((acc, paper) => acc + (paper.relatedPapers?.length || 0), 0)}
                     </div>
                     <div className="text-sm text-gray-400">Total Connections</div>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-purple-400">
-                      {Math.round(relatedPapers.reduce((acc, paper) => acc + (paper.relatedPapers?.length || 0), 0) / relatedPapers.length * 10) / 10}
+                      {allPapers.length > 0 ? Math.round(allPapers.reduce((acc, paper) => acc + (paper.relatedPapers?.length || 0), 0) / allPapers.length * 10) / 10 : 0}
                     </div>
                     <div className="text-sm text-gray-400">Avg Connections</div>
                   </div>
@@ -393,7 +398,7 @@ const PaperDetail = () => {
                 <>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-red-400">
-                      {Object.keys(relatedPapers.reduce((clusters, paper) => {
+                      {Object.keys(allPapers.reduce((clusters, paper) => {
                         const key = `${paper.category}-${paper.keywords[0]}`;
                         clusters[key] = true;
                         return clusters;
@@ -403,17 +408,17 @@ const PaperDetail = () => {
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-blue-400">
-                      {Math.max(...Object.values(relatedPapers.reduce((clusters, paper) => {
+                      {allPapers.length > 0 ? Math.max(...Object.values(allPapers.reduce((clusters, paper) => {
                         const key = `${paper.category}-${paper.keywords[0]}`;
                         clusters[key] = (clusters[key] || 0) + 1;
                         return clusters;
-                      }, {})).values())}
+                      }, {})).values()) : 0}
                     </div>
                     <div className="text-sm text-gray-400">Largest Cluster</div>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-green-400">
-                      {new Set(relatedPapers.map(p => p.category)).size}
+                      {new Set(allPapers.map(p => p.category)).size}
                     </div>
                     <div className="text-sm text-gray-400">Research Categories</div>
                   </div>
@@ -424,19 +429,19 @@ const PaperDetail = () => {
                 <>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-red-400">
-                      {Math.max(...relatedPapers.map(p => p.citations || 0))}
+                      {allPapers.length > 0 ? Math.max(...allPapers.map(p => p.citations || 0)) : 0}
                     </div>
                     <div className="text-sm text-gray-400">Highest Citations</div>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-yellow-400">
-                      {Math.round(relatedPapers.reduce((acc, p) => acc + (p.citations || 0), 0) / relatedPapers.length)}
+                      {allPapers.length > 0 ? Math.round(allPapers.reduce((acc, p) => acc + (p.citations || 0), 0) / allPapers.length) : 0}
                     </div>
                     <div className="text-sm text-gray-400">Avg Citations</div>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg text-center">
                     <div className="text-2xl font-bold text-green-400">
-                      {relatedPapers.filter(p => (p.citations || 0) > 50).length}
+                      {allPapers.filter(p => (p.citations || 0) > 50).length}
                     </div>
                     <div className="text-sm text-gray-400">High Impact Papers</div>
                   </div>
@@ -446,10 +451,16 @@ const PaperDetail = () => {
 
             {/* Knowledge Graph Visualization */}
             <div className="h-[500px] mb-6 bg-slate-900/40 rounded-xl border border-indigo-800/20 overflow-hidden">
-              <ResearchVisualizer 
-                papers={relatedPapers} 
-                activePaperId={parseInt(id)} 
+              <KnowledgeGraph2D 
+                papers={allPapers} 
                 mode={graphMode}
+                onNodeClick={(clickedPaper) => {
+                  // Navigate to the clicked paper
+                  window.location.href = `/paper/${clickedPaper.id}`;
+                }}
+                onNodeHover={(hoveredPaper) => {
+                  // Handle hover if needed
+                }}
               />
             </div>
             

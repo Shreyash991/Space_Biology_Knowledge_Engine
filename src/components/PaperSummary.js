@@ -1,9 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaFilePdf, FaExternalLinkAlt, FaQuoteRight, FaUsers, FaCalendarAlt, FaTag } from 'react-icons/fa';
-import ImageGallery from './ImageGallery';
 import ResearchDataVisualization from './ResearchDataVisualization';
-import ImageUploadGuide from './ImageUploadGuide';
 
 const PaperSummary = ({ paper }) => {
   // Ensure we have arrays even if they're missing in the data
@@ -115,12 +113,6 @@ const PaperSummary = ({ paper }) => {
         </div>
       )}
 
-      {/* Research Images */}
-      <ImageGallery images={paper.images} title="Research Figures" />
-      
-      {/* Image Upload Guide */}
-      <ImageUploadGuide />
-      
       {/* Research Data Visualization */}
       <ResearchDataVisualization paper={paper} />
     </motion.div>

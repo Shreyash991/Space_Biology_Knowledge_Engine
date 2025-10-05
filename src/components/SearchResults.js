@@ -173,10 +173,15 @@ const SearchResults = ({ searchResults, onClose }) => {
                     <div>
                       <div className="text-gray-400 mb-1">Most Common Category</div>
                       <div className="text-white font-medium">
-                        {results.reduce((acc, paper) => {
-                          acc[paper.category] = (acc[paper.category] || 0) + 1;
-                          return acc;
-                        }, {})}
+                        {(() => {
+                          const categoryCounts = results.reduce((acc, paper) => {
+                            acc[paper.category] = (acc[paper.category] || 0) + 1;
+                            return acc;
+                          }, {});
+                          const mostCommon = Object.entries(categoryCounts)
+                            .sort(([,a], [,b]) => b - a)[0];
+                          return mostCommon ? `${mostCommon[0]} (${mostCommon[1]})` : 'N/A';
+                        })()}
                       </div>
                     </div>
                     <div>
@@ -188,7 +193,10 @@ const SearchResults = ({ searchResults, onClose }) => {
                     <div>
                       <div className="text-gray-400 mb-1">Publication Range</div>
                       <div className="text-white font-medium">
-                        {Math.min(...results.map(p => new Date(p.publishedDate || p.publicationDate).getFullYear()))} - {Math.max(...results.map(p => new Date(p.publishedDate || p.publicationDate).getFullYear()))}
+                        {(() => {
+                          const years = results.map(p => new Date(p.publishedDate || p.publicationDate).getFullYear());
+                          return years.length > 0 ? `${Math.min(...years)} - ${Math.max(...years)}` : 'N/A';
+                        })()}
                       </div>
                     </div>
                   </div>

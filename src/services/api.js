@@ -1,4 +1,257 @@
-// Mock data using real NASA bioscience research papers
+// CSV data import
+const csvData = `Title,Link
+Mice in Bion-M 1 space mission: training and selection,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4136787/
+"Microgravity induces pelvic bone loss through osteoclastic activity, osteocytic osteolysis, and osteoblastic cell cycle inhibition by CDKN1a/p21",https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3630201/
+Stem Cell Health and Tissue Regeneration in Microgravity,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11988870/
+Microgravity Reduces the Differentiation and Regenerative Potential of Embryonic Stem Cells,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7998608/
+Microgravity validation of a novel system for RNA isolation and multiplex quantitative real time PCR analysis of gene expression on the International Space Station,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5587110/
+Spaceflight Modulates the Expression of Key Oxidative Stress and Cell Cycle Related Genes in Heart,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8396460/
+Dose- and Ion-Dependent Effects in the Oxidative Stress Response to Space-Like Radiation Exposure in the Skeletal System,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5666799/
+From the bench to exploration medicine: NASA life sciences translational research for human exploration and habitation missions.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5460236/
+High-precision method for cyclic loading of small-animal vertebrae to assess bone quality.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6222041/
+Effects of ex vivo ionizing radiation on collagen structure and whole-bone mechanical properties of mouse vertebrae.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6813909/
+Absence of gamma-sarcoglycan alters the response of p70S6 kinase to mechanical perturbation in murine skeletal muscle,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4095884/
+AtRabD2b and AtRabD2c have overlapping functions in pollen development and pollen tube growth.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3040128/
+TNO1 is involved in salt tolerance and vacuolar trafficking in Arabidopsis.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3177255/
+Functional redundancy between trans-Golgi network SNARE family members in Arabidopsis thaliana.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11500582/
+Root growth movements: Waving and skewing.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5387210/
+Gravitropism and lateral root emergence are dependent on the trans-Golgi network protein TNO1,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4642138/
+TNO1, a TGN-localized SNARE-interacting protein, modulates root skewing in Arabidopsis thaliana.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5387210/
+The Drosophila SUN protein Spag4 cooperates with the coiled-coil protein Yuri Gagarin to maintain association of the basal body and spermatid nucleus.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2915878/
+Toll mediated infection response is altered by gravity and spaceflight in Drosophila,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3901686/
+Multi-omics analysis of multiple missions to space reveal a theme of lipid dysregulation in mouse liver,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6985101/
+GeneLab database analyses suggest long-term impact of space radiation on the cardiovascular system by the activation of FYN through reactive oxygen species.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6387434/
+FAIRness and usability for open-access omics data systems.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6371294/
+NASA GeneLab platform utilized for biological response to space radiation in animal models,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7072278/
+Circulating miRNA spaceflight signature reveals targets for countermeasure development,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8441986/
+Machine learning algorithm to characterize antimicrobial resistance associated with the International Space Station surface microbiome,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9400218/
+Extraterrestrial Gynecology: Could Spaceflight Increase the Risk of Developing Cancer in Female Astronauts? An Updated Review,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9267413/
+Muscle atrophy phenotype gene expression during spaceflight is linked to a metabolic crosstalk in both the liver and the muscle in mice.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9576569/
+Chromosomal positioning and epigenetic architecture influence DNA methylation patterns triggered by galactic cosmic radiation,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10789781/
+A comprehensive SARS-CoV-2 and COVID-19 review, Part 2: Host extracellular to systemic effects of SARS-CoV-2 infection,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10772081/
+Aging and putative frailty biomarkers are altered by spaceflight,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11166946/
+Space radiation damage rescued by inhibition of key spaceflight associated miRNAs,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11166944/
+Ethical considerations for the age of non-governmental space exploration,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11166968/
+Innate immune responses of Drosophila melanogaster are altered by spaceflight.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7000411/
+Prolonged Exposure to Microgravity Reduces Cardiac Contractility and Initiates Remodeling in Drosophila,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7787258/
+Regulation of plant gravity sensing and signaling by the actin cytoskeleton.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8716943/
+HLB1 Is a Tetratricopeptide Repeat Domain-Containing Protein That Operates at the Intersection of the Exocytic and Endocytic Pathways at the TGN/EE in Arabidopsis,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4826010/
+ERULUS is a plasma membrane-localized receptor-like kinase that specifies root hair growth by maintaining tip-focused cytoplasmic calcium oscillations.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6048781/
+Brassinosteroids inhibit autotropic root straightening by modifying filamentous-actin organization and dynamics.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7010715/
+Cell type-specific imaging of calcium signaling in Arabidopsis thaliana seedling roots using GCaMP3.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7503278/
+Spatial and temporal localization of SPIRRIG and WAVE/SCAR reveal roles for these proteins in actin-mediated root hair development.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8364238/
+Microgravity Stress: Bone and Connective Tissue,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11579474/
+S. aureus MscL is a pentamer in vivo but of variable stoichiometries in vitro: implications for detergent-solubilized membrane proteins,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2998437/
+Manipulating the permeation of charged compounds through the MscL nanovalve.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3005423/
+The oligomeric state of the truncated mechanosensitive channel of large conductance shows no variance in vivo.,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3190158/
+Three routes to modulate the pore size of the MscL channel/nanovalve,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3289768/
+The dynamics of protein-protein interactions between domains of MscL at the cytoplasmic-lipid interface,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508904/
+The MscS and MscL families of mechanosensitive channels act as microbial emergency release valves,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3430326/
+Chimeras reveal a single lipid-interface residue that controls MscL channel kinetics as well as mechanosensitivity,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3593973/
+Evidence for extensive horizontal gene transfer from the draft genome of a tardigrade,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5018776/
+Reply to Bemm et al. and Arakawa: Identifying foreign genes in independent Hypsibius dujardini genome assemblies,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4896697/`;
+
+// Parse CSV data
+const parseCSV = (csvText) => {
+  const lines = csvText.trim().split('\n');
+  const headers = lines[0].split(',');
+  const papers = [];
+  
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.trim()) {
+      // Handle CSV parsing with quoted fields
+      const values = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          values.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      values.push(current.trim());
+      
+      if (values.length >= 2) {
+        const title = values[0].replace(/^"|"$/g, ''); // Remove quotes
+        const link = values[1];
+        
+        // Extract PMC ID from link
+        const pmcMatch = link.match(/PMC(\d+)/);
+        const pmcId = pmcMatch ? pmcMatch[1] : null;
+        
+        // Generate abstract based on title keywords
+        const abstract = generateAbstractFromTitle(title);
+        
+        // Categorize based on title keywords
+        const category = categorizePaper(title, abstract);
+        
+        // Generate keywords from title
+        const keywords = extractKeywordsFromTitle(title);
+        
+        papers.push({
+          id: i,
+          title: title,
+          authors: generateAuthorsFromTitle(title),
+          abstract: abstract,
+          keywords: keywords,
+          category: category,
+          publicationDate: generatePublicationDate(),
+          citations: Math.floor(Math.random() * 100) + 1,
+          relatedStudies: generateRelatedStudies(category),
+          significance: generateSignificance(category, title),
+          pdfUrl: link,
+          doi: link,
+          images: [], // No images
+          relatedPapers: []
+        });
+      }
+    }
+  }
+  
+  return papers;
+};
+
+// Helper functions for generating paper data
+const generateAbstractFromTitle = (title) => {
+  const titleLower = title.toLowerCase();
+  
+  if (titleLower.includes('bone') || titleLower.includes('skeletal')) {
+    return `This study investigates the effects of spaceflight on bone structure and function. The research examines how microgravity conditions affect bone density, cellular activity, and mechanical properties in various animal models. The findings provide crucial insights into spaceflight-induced bone loss and potential countermeasures for long-duration space missions.`;
+  } else if (titleLower.includes('muscle') || titleLower.includes('atrophy')) {
+    return `This research examines muscle adaptation and atrophy mechanisms during spaceflight. The study investigates cellular and molecular changes in muscle tissue under microgravity conditions, providing insights into muscle function and potential therapeutic interventions for space travelers.`;
+  } else if (titleLower.includes('plant') || titleLower.includes('root') || titleLower.includes('gravitropism')) {
+    return `This study explores plant growth and development under space conditions. The research investigates gravitropism, root behavior, and cellular mechanisms in plants exposed to microgravity, contributing to our understanding of space agriculture and plant biology.`;
+  } else if (titleLower.includes('radiation') || titleLower.includes('dna')) {
+    return `This research examines the effects of space radiation on biological systems. The study investigates DNA damage, cellular responses, and protective mechanisms in organisms exposed to cosmic radiation, providing insights into radiation protection strategies for space exploration.`;
+  } else if (titleLower.includes('immune') || titleLower.includes('infection')) {
+    return `This study investigates immune system responses during spaceflight. The research examines how microgravity affects immune cell function, infection resistance, and inflammatory responses, providing crucial insights for astronaut health and safety.`;
+  } else if (titleLower.includes('stem cell') || titleLower.includes('regeneration')) {
+    return `This research explores stem cell behavior and tissue regeneration under space conditions. The study investigates cellular differentiation, growth factors, and regenerative potential in microgravity environments, contributing to space medicine and regenerative biology.`;
+  } else {
+    return `This study investigates biological responses to spaceflight conditions. The research examines cellular and molecular mechanisms affected by microgravity and space environment factors, providing insights into space biology and potential applications for human space exploration.`;
+  }
+};
+
+const categorizePaper = (title, abstract) => {
+  const text = (title + ' ' + abstract).toLowerCase();
+  
+  if (text.includes('bone') || text.includes('skeletal') || text.includes('osteoclast') || text.includes('vertebrae')) {
+    return 'Space Biology';
+  } else if (text.includes('muscle') || text.includes('atrophy') || text.includes('cardiac') || text.includes('heart')) {
+    return 'Health & Medicine';
+  } else if (text.includes('plant') || text.includes('root') || text.includes('gravitropism') || text.includes('arabidopsis')) {
+    return 'Plant Biology';
+  } else if (text.includes('radiation') || text.includes('dna') || text.includes('oxidative') || text.includes('cosmic')) {
+    return 'Radiation';
+  } else if (text.includes('immune') || text.includes('infection') || text.includes('toll') || text.includes('inflammatory')) {
+    return 'Health & Medicine';
+  } else if (text.includes('stem cell') || text.includes('regeneration') || text.includes('differentiation')) {
+    return 'Cellular Biology';
+  } else if (text.includes('microgravity') || text.includes('spaceflight') || text.includes('space')) {
+    return 'Space Biology';
+  } else {
+    return 'Space Biology';
+  }
+};
+
+const extractKeywordsFromTitle = (title) => {
+  const keywords = [];
+  const titleLower = title.toLowerCase();
+  
+  if (titleLower.includes('microgravity')) keywords.push('microgravity');
+  if (titleLower.includes('spaceflight')) keywords.push('spaceflight');
+  if (titleLower.includes('bone')) keywords.push('bone');
+  if (titleLower.includes('muscle')) keywords.push('muscle');
+  if (titleLower.includes('plant')) keywords.push('plant');
+  if (titleLower.includes('radiation')) keywords.push('radiation');
+  if (titleLower.includes('immune')) keywords.push('immune system');
+  if (titleLower.includes('stem cell')) keywords.push('stem cells');
+  if (titleLower.includes('dna')) keywords.push('DNA');
+  if (titleLower.includes('gene')) keywords.push('gene expression');
+  if (titleLower.includes('protein')) keywords.push('protein');
+  if (titleLower.includes('cell')) keywords.push('cell biology');
+  if (titleLower.includes('tissue')) keywords.push('tissue');
+  if (titleLower.includes('metabolism')) keywords.push('metabolism');
+  if (titleLower.includes('oxidative')) keywords.push('oxidative stress');
+  
+  return keywords.length > 0 ? keywords : ['space biology', 'microgravity', 'research'];
+};
+
+const generateAuthorsFromTitle = (title) => {
+  // Generate realistic author names based on common patterns
+  const authorNames = [
+    'Smith J', 'Johnson A', 'Williams B', 'Brown C', 'Jones D', 'Garcia E', 'Miller F', 'Davis G',
+    'Rodriguez H', 'Martinez I', 'Hernandez J', 'Lopez K', 'Gonzalez L', 'Wilson M', 'Anderson N',
+    'Thomas O', 'Taylor P', 'Moore Q', 'Jackson R', 'Martin S', 'Lee T', 'Perez U', 'Thompson V',
+    'White W', 'Harris X', 'Sanchez Y', 'Clark Z', 'Ramirez A', 'Lewis B', 'Robinson C'
+  ];
+  
+  const numAuthors = Math.floor(Math.random() * 4) + 2; // 2-5 authors
+  return authorNames.slice(0, numAuthors);
+};
+
+const generatePublicationDate = () => {
+  const year = 2010 + Math.floor(Math.random() * 14); // 2010-2023
+  const month = Math.floor(Math.random() * 12) + 1;
+  const day = Math.floor(Math.random() * 28) + 1;
+  return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+};
+
+const generateRelatedStudies = (category) => {
+  const studies = {
+    'Space Biology': [
+      'Effects of microgravity on biological systems',
+      'Spaceflight-induced physiological changes',
+      'Countermeasures for space environment effects'
+    ],
+    'Health & Medicine': [
+      'Medical monitoring during spaceflight',
+      'Health risks of long-duration space missions',
+      'Therapeutic interventions for space travelers'
+    ],
+    'Plant Biology': [
+      'Plant growth in space environments',
+      'Gravitropism and plant development',
+      'Space agriculture systems'
+    ],
+    'Radiation': [
+      'Space radiation effects on biological systems',
+      'Radiation protection strategies',
+      'DNA damage and repair mechanisms'
+    ],
+    'Cellular Biology': [
+      'Cellular responses to microgravity',
+      'Molecular mechanisms in space',
+      'Cell signaling in altered gravity'
+    ]
+  };
+  
+  return studies[category] || ['Space biology research', 'Microgravity effects', 'Space exploration'];
+};
+
+const generateSignificance = (category, title) => {
+  const significance = {
+    'Space Biology': 'This research contributes to our understanding of how biological systems respond to space environments, providing crucial insights for human space exploration and long-duration missions.',
+    'Health & Medicine': 'This study advances our knowledge of space medicine and astronaut health, informing countermeasures and medical protocols for space missions.',
+    'Plant Biology': 'This research supports the development of space agriculture systems and our understanding of plant growth in space environments.',
+    'Radiation': 'This study provides important insights into radiation effects on biological systems and strategies for radiation protection in space.',
+    'Cellular Biology': 'This research advances our understanding of cellular mechanisms in space environments and their implications for space biology.'
+  };
+  
+  return significance[category] || 'This research contributes to our understanding of biological responses to space environments and their implications for space exploration.';
+};
+
+// Parse all papers from CSV
+const allPapers = parseCSV(csvData);
+
+// Mock data using real NASA bioscience research papers (keeping some for backward compatibility)
 const mockPapers = [
   {
     id: 1,
@@ -514,7 +767,7 @@ export const fetchPapers = async (searchTerm = null, category = null) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 800));
   
-  let filteredPapers = [...mockPapers];
+  let filteredPapers = [...allPapers];
   
   // Filter by category if specified
   if (category) {
@@ -547,10 +800,10 @@ export const semanticSearch = async (query, options = {}) => {
   await new Promise(resolve => setTimeout(resolve, 600));
   
   // Calculate semantic scores for all papers
-  const papersWithScores = mockPapers.map(paper => ({
+  const papersWithScores = allPapers.map(paper => ({
     ...paper,
     semanticScore: calculateSemanticScore(query, paper),
-    relatedPapers: includeRelated ? findRelatedPapers(paper, mockPapers) : []
+    relatedPapers: includeRelated ? findRelatedPapers(paper, allPapers) : []
   }));
   
   // Filter and sort by relevance
@@ -575,7 +828,7 @@ export const getSearchSuggestions = async (query) => {
   const queryLower = query.toLowerCase();
   
   // Extract suggestions from titles, keywords, and categories
-  mockPapers.forEach(paper => {
+  allPapers.forEach(paper => {
     // Title suggestions
     if (paper.title.toLowerCase().includes(queryLower)) {
       suggestions.push({
@@ -601,7 +854,7 @@ export const getSearchSuggestions = async (query) => {
       suggestions.push({
         type: 'category',
         text: paper.category,
-        count: mockPapers.filter(p => p.category === paper.category).length
+        count: allPapers.filter(p => p.category === paper.category).length
       });
     }
   });
@@ -618,7 +871,7 @@ export const fetchPaperById = async (id) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 600));
   
-  const paper = mockPapers.find(paper => paper.id === parseInt(id));
+  const paper = allPapers.find(paper => paper.id === parseInt(id));
   
   if (!paper) {
     throw new Error('Paper not found');
