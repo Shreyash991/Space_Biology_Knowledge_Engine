@@ -87,7 +87,7 @@ const About = () => {
           <div className="mt-6 pt-6 border-t border-indigo-800/30">
             <p className="text-gray-400 text-sm">
               This platform was created as part of NASA's initiative to make space biology research more accessible and actionable.
-              For questions or feedback, please contact us at <a href="mailto:contact@example.com" className="text-blue-400 hover:text-blue-300">contact@example.com</a>.
+              For questions or feedback, please contact us at <a href="mailto:help@nasa.com" className="text-blue-400 hover:text-blue-300">contact@example.com</a>.
             </p>
           </div>
         </div>

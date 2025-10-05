@@ -14,7 +14,7 @@ const PaperDetail = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('summary');
   const [relatedPapers, setRelatedPapers] = useState([]);
-  const [graphMode, setGraphMode] = useState('connections');
+  const [graphMode, setGraphMode] = useState('clusters');
   const [allPapers, setAllPapers] = useState([]);
   
   useEffect(() => {
@@ -338,16 +338,6 @@ const PaperDetail = () => {
               </div>
               
               <div className="flex gap-2">
-                <button 
-                  onClick={() => setGraphMode('connections')}
-                  className={`px-3 py-1 text-sm rounded-full border transition ${
-                    graphMode === 'connections'
-                      ? 'bg-indigo-900/40 text-indigo-300 border-indigo-800/30'
-                      : 'bg-slate-800/60 text-gray-400 border-slate-700/60 hover:bg-slate-700/60 hover:text-gray-300'
-                  }`}
-                >
-                  Research Connections
-                </button>
                 <button 
                   onClick={() => setGraphMode('clusters')}
                   className={`px-3 py-1 text-sm rounded-full border transition ${
