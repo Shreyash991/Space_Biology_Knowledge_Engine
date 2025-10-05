@@ -27,8 +27,16 @@ A beautiful, interactive dashboard for exploring NASA's bioscience research pape
 
 To enable the AI chatbot functionality:
 
-1. Get an API key from [Google AI Studio](https://makersuite.google.com/)
-2. Update the API key in `src/services/geminiService.js`
+1. Get an API key from Google AI Studio.
+2. Create a file named `.env.local` at the project root with:
+
+```
+REACT_APP_GEMINI_API_KEY=YOUR_GEMINI_KEY_HERE
+```
+
+3. Restart the dev server so the environment variable is loaded.
+
+Note: Never commit your real API key. The app reads the key from `process.env.REACT_APP_GEMINI_API_KEY`.
 
 ## Built With
 
