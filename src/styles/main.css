@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --space-blue: #1e3a8a;
+  --space-purple: #4338ca;
+  --nasa-red: #fc3d21;
+  --space-black: #0f172a;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background-color: var(--space-black);
+  color: #ffffff;
+}
+
+.paper-tile {
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.paper-tile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.2);
+}
+
+.star {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  animation: twinkle 4s infinite;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+.chat-message {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
