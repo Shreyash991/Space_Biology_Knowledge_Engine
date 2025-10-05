@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaBars, FaTimes, FaRocket } from 'react-icons/fa';
-import SearchBar from './SearchBar';
+import { FaBars, FaTimes, FaRocket } from 'react-icons/fa';
 import SemanticSearchBar from './SemanticSearchBar';
 import SearchResults from './SearchResults';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // deprecated basic search (kept state to avoid runtime issues)
   const [isSemanticSearchOpen, setIsSemanticSearchOpen] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
 
@@ -26,13 +25,6 @@ const Header = () => {
             <Link to="/" className="text-gray-300 hover:text-white transition">Home</Link>
             <Link to="/about" className="text-gray-300 hover:text-white transition">About</Link>
             <div className="flex items-center space-x-2">
-              <button 
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="p-2 rounded-full hover:bg-indigo-900/50 transition"
-                title="Basic Search"
-              >
-                <FaSearch className="text-lg text-gray-300" />
-              </button>
               <button 
                 onClick={() => setIsSemanticSearchOpen(true)}
                 className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition"
@@ -57,24 +49,12 @@ const Header = () => {
             <ul className="flex flex-col space-y-3">
               <li><Link to="/" className="block py-2 text-gray-300 hover:text-white">Home</Link></li>
               <li><Link to="/about" className="block py-2 text-gray-300 hover:text-white">About</Link></li>
-              <li>
-                <button 
-                  onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="flex items-center py-2 text-gray-300 hover:text-white"
-                >
-                  <FaSearch className="mr-2" /> Search
-                </button>
-              </li>
+              
             </ul>
           </nav>
         )}
 
-        {/* Search overlay */}
-        {isSearchOpen && (
-          <div className="mt-4">
-            <SearchBar onClose={() => setIsSearchOpen(false)} />
-          </div>
-        )}
+        
       </div>
 
       {/* Semantic Search Modal */}

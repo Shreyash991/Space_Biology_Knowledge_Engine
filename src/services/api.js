@@ -185,16 +185,36 @@ const extractKeywordsFromTitle = (title) => {
 };
 
 const generateAuthorsFromTitle = (title) => {
-  // Generate realistic author names based on common patterns
-  const authorNames = [
+  // Diverse pool of surnames with initials
+  const authorPool = [
     'Smith J', 'Johnson A', 'Williams B', 'Brown C', 'Jones D', 'Garcia E', 'Miller F', 'Davis G',
     'Rodriguez H', 'Martinez I', 'Hernandez J', 'Lopez K', 'Gonzalez L', 'Wilson M', 'Anderson N',
     'Thomas O', 'Taylor P', 'Moore Q', 'Jackson R', 'Martin S', 'Lee T', 'Perez U', 'Thompson V',
-    'White W', 'Harris X', 'Sanchez Y', 'Clark Z', 'Ramirez A', 'Lewis B', 'Robinson C'
+    'White W', 'Harris X', 'Sanchez Y', 'Clark Z', 'Ramirez A', 'Lewis B', 'Robinson C', 'Walker D',
+    'Young E', 'Allen F', 'King G', 'Wright H', 'Scott I', 'Torres J', 'Nguyen K', 'Hill L',
+    'Flores M', 'Green N', 'Adams O', 'Nelson P', 'Baker Q', 'Hall R', 'Rivera S', 'Campbell T',
+    'Mitchell U', 'Carter V', 'Roberts W', 'Gomez X', 'Phillips Y', 'Evans Z'
   ];
-  
-  const numAuthors = Math.floor(Math.random() * 4) + 2; // 2-5 authors
-  return authorNames.slice(0, numAuthors);
+
+  // Title-based deterministic hash so authors are consistent per paper yet varied across papers
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = (hash * 31 + title.charCodeAt(i)) >>> 0;
+  }
+
+  const numAuthors = (hash % 4) + 2; // 2-5 authors
+  const authors = [];
+  let cursor = hash % authorPool.length;
+  const used = new Set();
+  while (authors.length < numAuthors) {
+    const pick = authorPool[cursor % authorPool.length];
+    if (!used.has(pick)) {
+      authors.push(pick);
+      used.add(pick);
+    }
+    cursor += (hash % 17) + 3; // jump to spread picks
+  }
+  return authors;
 };
 
 const generatePublicationDate = () => {
